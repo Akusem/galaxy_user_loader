@@ -26,9 +26,9 @@ SMTP_PORT = 587
 MAIL = ""
 MAIL_PASSWORD = ""
 LOGIN_SUBJECT = "Galaxy Account creation"
-# Will use "".format(user_mail, user_password)
-# So use {} in string in good order
-LOGIN_BODY_HTML = (
+# Need to contain two '{}', as it will use LOGIN_MAIL_BODY_HTML.format(user_mail, user_password)
+# So use {} in good order
+LOGIN_MAIL_BODY_HTML = (
     f"Your student account for <a href='{GALAXY_URL}'>Galaxy</a> have been created.<br />"
     "Your login information are: <br />"
     "Login: {}\n <br />"
@@ -37,7 +37,7 @@ LOGIN_BODY_HTML = (
     "<b>Please change your password on first login for security</b>"
 )
 # If email client doesn't accept HTML, fallback on this text version
-LOGIN_BODY_FALLBACK = (
+LOGIN_MAIL_BODY_FALLBACK = (
     "Your student account for Galaxy have been created.\n"
     "Your login information are:\n"
     "Login: {}\n"
@@ -262,7 +262,7 @@ def purge_users_info(c: Console):
     ids = get_users_id_by_mails(gi, emails)
     with c.status(f"[bold green] Purging account"):
         for id, email in zip(ids, emails):
-            # gi.users.delete_user(user_id=id, purge=True)
+            gi.users.delete_user(user_id=id, purge=True)
             c.print(
                 f"User [italic green]{email}[/] (id: [italic blue]{id}[/]) [bold red]purged[/] from Galaxy"
             )
@@ -427,8 +427,8 @@ class EmailServer:
         email: str,
         password: str,
         subject=LOGIN_SUBJECT,
-        body_html=LOGIN_BODY_HTML,
-        body_fallback=LOGIN_BODY_FALLBACK,
+        body_html=LOGIN_MAIL_BODY_HTML,
+        body_fallback=LOGIN_MAIL_BODY_FALLBACK,
         success_message="",
     ):
         msg = EmailMessage()
