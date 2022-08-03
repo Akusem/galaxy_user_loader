@@ -411,12 +411,13 @@ class EmailServer:
         atexit.register(self.close)
 
         try:
-            context = ssl.create_default_context()
-            self.server = smtplib.SMTP(smtp_host, smtp_port)
-            self.server.ehlo()
-            self.server.starttls(context=context)
-            self.server.ehlo()
-            self.server.login(self.user, password)
+            with self.c.status(f"[bold green] Connecting to email server {smtp_host}"):
+                context = ssl.create_default_context()
+                self.server = smtplib.SMTP(smtp_host, smtp_port)
+                self.server.ehlo()
+                self.server.starttls(context=context)
+                self.server.ehlo()
+                self.server.login(self.user, password)
         except Exception as error:
             self.c.print(
                 f"Couldn't connect to [italic green]SMTP server[/] due to: {error}"
