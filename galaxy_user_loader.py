@@ -16,17 +16,27 @@ from rich import print
 from rich.console import Console
 from rich.traceback import install
 
+# URL of the Galaxy instance
 GALAXY_URL = "http://127.0.0.1:8080"
+# Admin API key, can be generated in user preferences > Manage API Key
 API_KEY = ""
+# When creating new accounts, a password is randomly generated, this define it's length
 PASSWORD_LENGTH = 16
-PASSWORD_FILE = "./galaxy_user_{}.txt"  # password file path with a '{}' where the date will be put with ''.format
+# All the created users and their password can be stored in a file.
+# This define the name of the file, it should contain a '{}' where the date will be put using format
+PASSWORD_FILE = "./galaxy_user_{}.txt"
 
+# Email SMTP Host URL
 SMTP_HOST = "smtp-mail.outlook.com"
 SMTP_PORT = 587
+# Sender email credential
 MAIL = ""
 MAIL_PASSWORD = ""
-LOGIN_SUBJECT = "Galaxy Account creation"
-# Need to contain two '{}', as it will use LOGIN_MAIL_BODY_HTML.format(user_mail, user_password)
+# When creating a new account, galaxy_user_loader.py will send an email to the user with his credential.
+# Mail subject
+LOGIN_MAIL_SUBJECT = "Galaxy Account creation"
+# Mail content sended to new users, will use HTML and text (FALLBACK)
+# Need to contain two '{}', as the script will use LOGIN_MAIL_BODY_HTML.format(user_mail, user_password)
 # So use {} in good order
 LOGIN_MAIL_BODY_HTML = (
     f"Your student account for <a href='{GALAXY_URL}'>Galaxy</a> have been created.<br />"
@@ -427,7 +437,7 @@ class EmailServer:
         self,
         email: str,
         password: str,
-        subject=LOGIN_SUBJECT,
+        subject=LOGIN_MAIL_SUBJECT,
         body_html=LOGIN_MAIL_BODY_HTML,
         body_fallback=LOGIN_MAIL_BODY_FALLBACK,
         success_message="",
